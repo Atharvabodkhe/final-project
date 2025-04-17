@@ -60,33 +60,33 @@ export default function ContactPage() {
   }
   
   return (
-    <div className="container mx-auto px-4 py-8">
-      <header className="mb-12 text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-2">
+    <div className="container mx-auto px-4 py-6 md:py-8">
+      <header className="mb-8 md:mb-12 text-center">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-2">
           Contact Us
         </h1>
-        <p className="text-lg text-slate-600 dark:text-slate-400">
+        <p className="text-base md:text-lg text-slate-600 dark:text-slate-400">
           Get in touch with The Byte Highlight team
         </p>
       </header>
       
-      <div className="max-w-2xl mx-auto bg-white dark:bg-slate-800 p-8 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+      <div className="max-w-2xl mx-auto bg-white dark:bg-slate-800 p-6 md:p-8 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
         {submitted ? (
           <div className="text-center">
-            <h2 className="text-2xl font-semibold mb-4 text-slate-900 dark:text-slate-100">Thank You!</h2>
+            <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4 text-slate-900 dark:text-slate-100">Thank You!</h2>
             <p className="text-slate-600 dark:text-slate-400 mb-4">
               Your message has been sent successfully. We'll get back to you as soon as possible.
             </p>
           </div>
         ) : (
           <>
-            <h2 className="text-2xl font-semibold mb-4 text-slate-900 dark:text-slate-100">Send Us a Message</h2>
-            <p className="text-slate-600 dark:text-slate-400 mb-6">
+            <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4 text-slate-900 dark:text-slate-100">Send Us a Message</h2>
+            <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 mb-6">
               Have a question, suggestion, or feedback? Fill out the form below and we'll respond promptly.
             </p>
             
             {error && (
-              <div className="bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-200 p-4 rounded-md mb-6">
+              <div className="bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-200 p-4 rounded-md mb-6 text-sm md:text-base">
                 {error}
               </div>
             )}
@@ -103,7 +103,7 @@ export default function ContactPage() {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:text-white text-sm md:text-base"
                     required
                   />
                 </div>
@@ -118,7 +118,7 @@ export default function ContactPage() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:text-white text-sm md:text-base"
                     required
                   />
                 </div>
@@ -134,7 +134,7 @@ export default function ContactPage() {
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:text-white text-sm md:text-base"
                   required
                 />
               </div>
@@ -149,7 +149,7 @@ export default function ContactPage() {
                   value={formData.message}
                   onChange={handleChange}
                   rows={5}
-                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:text-white text-sm md:text-base"
                   required
                 ></textarea>
               </div>
@@ -157,7 +157,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors disabled:opacity-70 disabled:cursor-not-allowed text-sm md:text-base"
               >
                 {isLoading ? "Sending..." : "Send Message"}
               </button>
