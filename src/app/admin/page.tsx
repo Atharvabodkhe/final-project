@@ -68,7 +68,7 @@ const quickActions = [
     title: "Manage Subscribers",
     description: "View and edit subscriber lists",
     icon: <Users className="h-5 w-5" />,
-    path: "/admin",
+    path: "/admin/subscribers",
     color: "bg-gradient-to-br from-indigo-500 to-purple-600"
   },
 ];

@@ -48,6 +48,14 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { createClient } from "@supabase/supabase-js"
 import { toast } from "@/components/ui/use-toast"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+  SheetDescription,
+} from "@/components/ui/sheet"
 
 // Create Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
@@ -121,6 +129,27 @@ export default function ArticlesManagement() {
     show: { opacity: 1, y: 0 }
   }
   
+  // Add states for sheet components
+  const [showAddAuthorSheet, setShowAddAuthorSheet] = useState(false)
+  const [showAddChannelSheet, setShowAddChannelSheet] = useState(false)
+  const [showAddCategorySheet, setShowAddCategorySheet] = useState(false)
+  const [showAddNewsletterSheet, setShowAddNewsletterSheet] = useState(false)
+  const [showAddTopicSheet, setShowAddTopicSheet] = useState(false)
+  
+  // Add states for new entry values
+  const [newAuthor, setNewAuthor] = useState("")
+  const [newChannel, setNewChannel] = useState("")
+  const [newCategory, setNewCategory] = useState("")
+  const [newNewsletter, setNewNewsletter] = useState("")
+  const [newTopic, setNewTopic] = useState("")
+  
+  // Add states to track existing values
+  const [authors, setAuthors] = useState<string[]>([])
+  const [channels, setChannels] = useState<string[]>(["news", "tech", "sports", "entertainment"])
+  const [categories, setCategories] = useState<string[]>(["technology", "business", "health", "science"])
+  const [newsletters, setNewsletters] = useState<string[]>(["weekly", "monthly", "quarterly", "special"])
+  const [topics, setTopics] = useState<string[]>(["ai", "climate change", "finance", "politics", "healthcare"])
+  
   useEffect(() => {
     // Check if user is authenticated
     const auth = localStorage.getItem("admin-auth")
@@ -129,6 +158,7 @@ export default function ArticlesManagement() {
     } else {
       setIsAuthenticated(true)
       fetchArticles()
+      fetchMetadata()
     }
   }, [router])
   
@@ -156,6 +186,101 @@ export default function ArticlesManagement() {
       console.error("Failed to fetch articles:", err)
       setError(err.message || "Failed to load articles. Please try again later.")
       setIsLoading(false)
+    }
+  }
+  
+  const fetchMetadata = async () => {
+    try {
+      if (!supabaseUrl || !supabaseKey) {
+        console.error("Supabase credentials are not properly configured")
+        return
+      }
+      
+      console.log("Fetching metadata from Supabase")
+      
+      // Fetch authors
+      const { data: authorsData, error: authorsError } = await supabase
+        .from('authors')
+        .select('value,label')
+      
+      if (authorsError) {
+        console.error("Error fetching authors:", authorsError)
+      } else if (authorsData && authorsData.length > 0) {
+        const authorValues = authorsData.map(item => item.value)
+        setAuthors(authorValues.length > 0 ? authorValues : ["John Doe", "Jane Smith", "Admin"])
+      }
+      
+      // Fetch channels
+      const { data: channelsData, error: channelsError } = await supabase
+        .from('channels')
+        .select('value,label')
+      
+      if (channelsError) {
+        console.error("Error fetching channels:", channelsError)
+      } else if (channelsData && channelsData.length > 0) {
+        const channelValues = channelsData.map(item => item.value)
+        setChannels(channelValues.length > 0 ? channelValues : ["news", "tech", "sports", "entertainment"])
+      }
+      
+      // Fetch categories
+      const { data: categoriesData, error: categoriesError } = await supabase
+        .from('categories')
+        .select('value,label')
+      
+      if (categoriesError) {
+        console.error("Error fetching categories:", categoriesError)
+      } else if (categoriesData && categoriesData.length > 0) {
+        const categoryValues = categoriesData.map(item => item.value)
+        setCategories(categoryValues.length > 0 ? categoryValues : ["technology", "business", "health", "science"])
+      }
+      
+      // Fetch newsletters
+      const { data: newslettersData, error: newslettersError } = await supabase
+        .from('newsletters')
+        .select('value,label')
+      
+      if (newslettersError) {
+        console.error("Error fetching newsletters:", newslettersError)
+      } else if (newslettersData && newslettersData.length > 0) {
+        const newsletterValues = newslettersData.map(item => item.value)
+        setNewsletters(newsletterValues.length > 0 ? newsletterValues : ["weekly", "monthly", "quarterly", "special"])
+      }
+      
+      // Fetch topics
+      const { data: topicsData, error: topicsError } = await supabase
+        .from('topics')
+        .select('value,label')
+      
+      if (topicsError) {
+        console.error("Error fetching topics:", topicsError)
+      } else if (topicsData && topicsData.length > 0) {
+        const topicValues = topicsData.map(item => item.value)
+        setTopics(topicValues.length > 0 ? topicValues : ["ai", "climate change", "finance", "politics", "healthcare"])
+      }
+      
+      console.log("Metadata loaded successfully")
+      
+      // Also extract unique authors from articles as a fallback
+      const { data: articlesData, error: articlesError } = await supabase
+        .from('articles')
+        .select('author')
+      
+      if (articlesError) {
+        console.error("Error fetching authors from articles:", articlesError)
+        return
+      }
+      
+      if (articlesData && articlesData.length > 0) {
+        // Extract unique authors from articles and merge with existing authors
+        const uniqueAuthorsFromArticles = [...new Set(articlesData.map(item => item.author))].filter(Boolean)
+        setAuthors(prev => {
+          const combinedAuthors = [...prev, ...uniqueAuthorsFromArticles]
+          return [...new Set(combinedAuthors)] // Remove duplicates
+        })
+      }
+      
+    } catch (err) {
+      console.error("Error fetching metadata:", err)
     }
   }
   
@@ -203,8 +328,7 @@ export default function ArticlesManagement() {
   }
   
   const uniqueAuthors = () => {
-    const authors = articles.map(article => article.author)
-    return [...new Set(authors)]
+    return authors;
   }
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -467,6 +591,247 @@ export default function ArticlesManagement() {
     })
   }
   
+  // Add functions to handle adding new items
+  const handleAddAuthor = async () => {
+    if (!newAuthor.trim()) return
+    
+    try {
+      if (!supabaseUrl || !supabaseKey) {
+        throw new Error("Supabase credentials are not properly configured")
+      }
+      
+      console.log("Attempting to add author:", newAuthor)
+      
+      // Insert into authors table with both value and label fields
+      const { data, error } = await supabase
+        .from('authors')
+        .insert([{ 
+          value: newAuthor,
+          label: newAuthor // Adding the required label field
+        }])
+      
+      if (error) {
+        console.error("Supabase error:", error)
+        throw new Error(error.message || "Failed to add author to database")
+      }
+      
+      // Update the local state
+      setAuthors(prev => [...prev, newAuthor])
+      
+      // Select the new value
+      setFormData(prev => ({ ...prev, author: newAuthor }))
+      
+      // Reset form and close sheet
+      setNewAuthor("")
+      setShowAddAuthorSheet(false)
+      
+      toast({
+        title: "Author added",
+        description: `${newAuthor} has been added to the authors list`,
+      })
+      
+    } catch (err: any) {
+      console.error("Failed to add author:", err)
+      toast({
+        title: "Error adding author",
+        description: err.message || "Failed to add author",
+        variant: "destructive",
+      })
+    }
+  }
+  
+  const handleAddChannel = async () => {
+    if (!newChannel.trim()) return
+    
+    try {
+      if (!supabaseUrl || !supabaseKey) {
+        throw new Error("Supabase credentials are not properly configured")
+      }
+      
+      console.log("Attempting to add channel:", newChannel)
+      
+      // Insert into channels table
+      const { data, error } = await supabase
+        .from('channels')
+        .insert([{ 
+          value: newChannel,
+          label: newChannel // Adding the required label field
+        }])
+      
+      if (error) {
+        console.error("Supabase error:", error)
+        throw new Error(error.message || "Failed to add channel to database")
+      }
+      
+      // Update the local state
+      setChannels(prev => [...prev, newChannel])
+      
+      // Select the new value
+      setFormData(prev => ({ ...prev, channel: newChannel }))
+      
+      // Reset form and close sheet
+      setNewChannel("")
+      setShowAddChannelSheet(false)
+      
+      toast({
+        title: "Channel added",
+        description: `${newChannel} has been added to the channels list`,
+      })
+      
+    } catch (err: any) {
+      console.error("Failed to add channel:", err)
+      toast({
+        title: "Error adding channel",
+        description: err.message || "Failed to add channel",
+        variant: "destructive",
+      })
+    }
+  }
+  
+  const handleAddCategory = async () => {
+    if (!newCategory.trim()) return
+    
+    try {
+      if (!supabaseUrl || !supabaseKey) {
+        throw new Error("Supabase credentials are not properly configured")
+      }
+      
+      console.log("Attempting to add category:", newCategory)
+      
+      // Insert into categories table
+      const { data, error } = await supabase
+        .from('categories')
+        .insert([{ 
+          value: newCategory,
+          label: newCategory // Adding the required label field
+        }])
+      
+      if (error) {
+        console.error("Supabase error:", error)
+        throw new Error(error.message || "Failed to add category to database")
+      }
+      
+      // Update the local state
+      setCategories(prev => [...prev, newCategory])
+      
+      // Select the new value
+      setFormData(prev => ({ ...prev, category: newCategory }))
+      
+      // Reset form and close sheet
+      setNewCategory("")
+      setShowAddCategorySheet(false)
+      
+      toast({
+        title: "Category added",
+        description: `${newCategory} has been added to the categories list`,
+      })
+      
+    } catch (err: any) {
+      console.error("Failed to add category:", err)
+      toast({
+        title: "Error adding category",
+        description: err.message || "Failed to add category",
+        variant: "destructive",
+      })
+    }
+  }
+  
+  const handleAddNewsletter = async () => {
+    if (!newNewsletter.trim()) return
+    
+    try {
+      if (!supabaseUrl || !supabaseKey) {
+        throw new Error("Supabase credentials are not properly configured")
+      }
+      
+      console.log("Attempting to add newsletter:", newNewsletter)
+      
+      // Insert into newsletters table
+      const { data, error } = await supabase
+        .from('newsletters')
+        .insert([{ 
+          value: newNewsletter,
+          label: newNewsletter // Adding the required label field
+        }])
+      
+      if (error) {
+        console.error("Supabase error:", error)
+        throw new Error(error.message || "Failed to add newsletter to database")
+      }
+      
+      // Update the local state
+      setNewsletters(prev => [...prev, newNewsletter])
+      
+      // Select the new value
+      setFormData(prev => ({ ...prev, newsletter: newNewsletter }))
+      
+      // Reset form and close sheet
+      setNewNewsletter("")
+      setShowAddNewsletterSheet(false)
+      
+      toast({
+        title: "Newsletter added",
+        description: `${newNewsletter} has been added to the newsletters list`,
+      })
+      
+    } catch (err: any) {
+      console.error("Failed to add newsletter:", err)
+      toast({
+        title: "Error adding newsletter",
+        description: err.message || "Failed to add newsletter",
+        variant: "destructive",
+      })
+    }
+  }
+  
+  const handleAddTopic = async () => {
+    if (!newTopic.trim()) return
+    
+    try {
+      if (!supabaseUrl || !supabaseKey) {
+        throw new Error("Supabase credentials are not properly configured")
+      }
+      
+      console.log("Attempting to add topic:", newTopic)
+      
+      // Insert into topics table
+      const { data, error } = await supabase
+        .from('topics')
+        .insert([{ 
+          value: newTopic,
+          label: newTopic // Adding the required label field
+        }])
+      
+      if (error) {
+        console.error("Supabase error:", error)
+        throw new Error(error.message || "Failed to add topic to database")
+      }
+      
+      // Update the local state
+      setTopics(prev => [...prev, newTopic])
+      
+      // Select the new value
+      setFormData(prev => ({ ...prev, topic: newTopic }))
+      
+      // Reset form and close sheet
+      setNewTopic("")
+      setShowAddTopicSheet(false)
+      
+      toast({
+        title: "Topic added",
+        description: `${newTopic} has been added to the topics list`,
+      })
+      
+    } catch (err: any) {
+      console.error("Failed to add topic:", err)
+      toast({
+        title: "Error adding topic",
+        description: err.message || "Failed to add topic",
+        variant: "destructive",
+      })
+    }
+  }
+  
   if (!isAuthenticated) {
     return null
   }
@@ -557,10 +922,8 @@ export default function ArticlesManagement() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Authors</SelectItem>
-                  {uniqueAuthors().map(author => (
-                    <SelectItem key={author} value={author}>
-                      {author}
-                    </SelectItem>
+                  {authors.map((author) => (
+                    <SelectItem key={author} value={author}>{author}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -806,14 +1169,17 @@ export default function ArticlesManagement() {
                       <SelectValue placeholder="Select author" />
                     </SelectTrigger>
                     <SelectContent className="bg-[#1e293b] border border-[#334155] text-slate-100">
-                      {uniqueAuthors().map(author => (
-                        <SelectItem key={author} value={author} className="focus:bg-[#334155]">
-                          {author}
-                        </SelectItem>
+                      {authors.map((author) => (
+                        <SelectItem key={author} value={author} className="focus:bg-[#334155]">{author}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <Button size="icon" variant="outline" className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100">
+                  <Button 
+                    size="icon" 
+                    variant="outline" 
+                    className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100"
+                    onClick={() => setShowAddAuthorSheet(true)}
+                  >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
@@ -836,13 +1202,17 @@ export default function ArticlesManagement() {
                       <SelectValue placeholder="Select channel" />
                     </SelectTrigger>
                     <SelectContent className="bg-[#1e293b] border border-[#334155] text-slate-100">
-                      <SelectItem value="news" className="focus:bg-[#334155]">News</SelectItem>
-                      <SelectItem value="tech" className="focus:bg-[#334155]">Tech</SelectItem>
-                      <SelectItem value="sports" className="focus:bg-[#334155]">Sports</SelectItem>
-                      <SelectItem value="entertainment" className="focus:bg-[#334155]">Entertainment</SelectItem>
+                      {channels.map((channel) => (
+                        <SelectItem key={channel} value={channel} className="focus:bg-[#334155]">{channel}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
-                  <Button size="icon" variant="outline" className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100">
+                  <Button 
+                    size="icon" 
+                    variant="outline" 
+                    className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100"
+                    onClick={() => setShowAddChannelSheet(true)}
+                  >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
@@ -867,13 +1237,17 @@ export default function ArticlesManagement() {
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent className="bg-[#1e293b] border border-[#334155] text-slate-100">
-                      <SelectItem value="technology" className="focus:bg-[#334155]">Technology</SelectItem>
-                      <SelectItem value="business" className="focus:bg-[#334155]">Business</SelectItem>
-                      <SelectItem value="health" className="focus:bg-[#334155]">Health</SelectItem>
-                      <SelectItem value="science" className="focus:bg-[#334155]">Science</SelectItem>
+                      {categories.map((category) => (
+                        <SelectItem key={category} value={category} className="focus:bg-[#334155]">{category}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
-                  <Button size="icon" variant="outline" className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100">
+                  <Button 
+                    size="icon" 
+                    variant="outline" 
+                    className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100"
+                    onClick={() => setShowAddCategorySheet(true)}
+                  >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
@@ -896,13 +1270,17 @@ export default function ArticlesManagement() {
                       <SelectValue placeholder="Select newsletter" />
                     </SelectTrigger>
                     <SelectContent className="bg-[#1e293b] border border-[#334155] text-slate-100">
-                      <SelectItem value="weekly" className="focus:bg-[#334155]">Weekly</SelectItem>
-                      <SelectItem value="monthly" className="focus:bg-[#334155]">Monthly</SelectItem>
-                      <SelectItem value="quarterly" className="focus:bg-[#334155]">Quarterly</SelectItem>
-                      <SelectItem value="special" className="focus:bg-[#334155]">Special</SelectItem>
+                      {newsletters.map((newsletter) => (
+                        <SelectItem key={newsletter} value={newsletter} className="focus:bg-[#334155]">{newsletter}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
-                  <Button size="icon" variant="outline" className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100">
+                  <Button 
+                    size="icon" 
+                    variant="outline" 
+                    className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100"
+                    onClick={() => setShowAddNewsletterSheet(true)}
+                  >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
@@ -926,14 +1304,17 @@ export default function ArticlesManagement() {
                     <SelectValue placeholder="Select topic" />
                   </SelectTrigger>
                   <SelectContent className="bg-[#1e293b] border border-[#334155] text-slate-100">
-                    <SelectItem value="ai" className="focus:bg-[#334155]">AI</SelectItem>
-                    <SelectItem value="climate change" className="focus:bg-[#334155]">Climate Change</SelectItem>
-                    <SelectItem value="finance" className="focus:bg-[#334155]">Finance</SelectItem>
-                    <SelectItem value="politics" className="focus:bg-[#334155]">Politics</SelectItem>
-                    <SelectItem value="healthcare" className="focus:bg-[#334155]">Healthcare</SelectItem>
+                    {topics.map((topic) => (
+                      <SelectItem key={topic} value={topic} className="focus:bg-[#334155]">{topic}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
-                <Button size="icon" variant="outline" className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100">
+                <Button 
+                  size="icon" 
+                  variant="outline" 
+                  className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100"
+                  onClick={() => setShowAddTopicSheet(true)}
+                >
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
@@ -1043,14 +1424,17 @@ export default function ArticlesManagement() {
                       <SelectValue placeholder="Select author" />
                     </SelectTrigger>
                     <SelectContent className="bg-[#1e293b] border border-[#334155] text-slate-100">
-                      {uniqueAuthors().map(author => (
-                        <SelectItem key={author} value={author} className="focus:bg-[#334155]">
-                          {author}
-                        </SelectItem>
+                      {authors.map((author) => (
+                        <SelectItem key={author} value={author} className="focus:bg-[#334155]">{author}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <Button size="icon" variant="outline" className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100">
+                  <Button 
+                    size="icon" 
+                    variant="outline" 
+                    className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100"
+                    onClick={() => setShowAddAuthorSheet(true)}
+                  >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
@@ -1073,13 +1457,17 @@ export default function ArticlesManagement() {
                       <SelectValue placeholder="Select channel" />
                     </SelectTrigger>
                     <SelectContent className="bg-[#1e293b] border border-[#334155] text-slate-100">
-                      <SelectItem value="news" className="focus:bg-[#334155]">News</SelectItem>
-                      <SelectItem value="tech" className="focus:bg-[#334155]">Tech</SelectItem>
-                      <SelectItem value="sports" className="focus:bg-[#334155]">Sports</SelectItem>
-                      <SelectItem value="entertainment" className="focus:bg-[#334155]">Entertainment</SelectItem>
+                      {channels.map((channel) => (
+                        <SelectItem key={channel} value={channel} className="focus:bg-[#334155]">{channel}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
-                  <Button size="icon" variant="outline" className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100">
+                  <Button 
+                    size="icon" 
+                    variant="outline" 
+                    className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100"
+                    onClick={() => setShowAddChannelSheet(true)}
+                  >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
@@ -1104,13 +1492,17 @@ export default function ArticlesManagement() {
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent className="bg-[#1e293b] border border-[#334155] text-slate-100">
-                      <SelectItem value="technology" className="focus:bg-[#334155]">Technology</SelectItem>
-                      <SelectItem value="business" className="focus:bg-[#334155]">Business</SelectItem>
-                      <SelectItem value="health" className="focus:bg-[#334155]">Health</SelectItem>
-                      <SelectItem value="science" className="focus:bg-[#334155]">Science</SelectItem>
+                      {categories.map((category) => (
+                        <SelectItem key={category} value={category} className="focus:bg-[#334155]">{category}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
-                  <Button size="icon" variant="outline" className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100">
+                  <Button 
+                    size="icon" 
+                    variant="outline" 
+                    className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100"
+                    onClick={() => setShowAddCategorySheet(true)}
+                  >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
@@ -1133,13 +1525,17 @@ export default function ArticlesManagement() {
                       <SelectValue placeholder="Select newsletter" />
                     </SelectTrigger>
                     <SelectContent className="bg-[#1e293b] border border-[#334155] text-slate-100">
-                      <SelectItem value="weekly" className="focus:bg-[#334155]">Weekly</SelectItem>
-                      <SelectItem value="monthly" className="focus:bg-[#334155]">Monthly</SelectItem>
-                      <SelectItem value="quarterly" className="focus:bg-[#334155]">Quarterly</SelectItem>
-                      <SelectItem value="special" className="focus:bg-[#334155]">Special</SelectItem>
+                      {newsletters.map((newsletter) => (
+                        <SelectItem key={newsletter} value={newsletter} className="focus:bg-[#334155]">{newsletter}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
-                  <Button size="icon" variant="outline" className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100">
+                  <Button 
+                    size="icon" 
+                    variant="outline" 
+                    className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100"
+                    onClick={() => setShowAddNewsletterSheet(true)}
+                  >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
@@ -1163,14 +1559,17 @@ export default function ArticlesManagement() {
                     <SelectValue placeholder="Select topic" />
                   </SelectTrigger>
                   <SelectContent className="bg-[#1e293b] border border-[#334155] text-slate-100">
-                    <SelectItem value="ai" className="focus:bg-[#334155]">AI</SelectItem>
-                    <SelectItem value="climate change" className="focus:bg-[#334155]">Climate Change</SelectItem>
-                    <SelectItem value="finance" className="focus:bg-[#334155]">Finance</SelectItem>
-                    <SelectItem value="politics" className="focus:bg-[#334155]">Politics</SelectItem>
-                    <SelectItem value="healthcare" className="focus:bg-[#334155]">Healthcare</SelectItem>
+                    {topics.map((topic) => (
+                      <SelectItem key={topic} value={topic} className="focus:bg-[#334155]">{topic}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
-                <Button size="icon" variant="outline" className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100">
+                <Button 
+                  size="icon" 
+                  variant="outline" 
+                  className="h-9 w-9 rounded-md border-[#334155] bg-[#1e293b] hover:bg-[#334155] text-slate-400 hover:text-slate-100"
+                  onClick={() => setShowAddTopicSheet(true)}
+                >
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
@@ -1273,6 +1672,162 @@ export default function ArticlesManagement() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      
+      {/* Add Sheet Components */}
+      <Sheet open={showAddAuthorSheet} onOpenChange={setShowAddAuthorSheet}>
+        <SheetContent className="bg-[#0f172a] border-l border-[#1e293b] text-slate-200">
+          <SheetHeader>
+            <SheetTitle className="text-slate-100">Add New Author</SheetTitle>
+            <SheetDescription className="text-slate-400">
+              Add a new author to the dropdown list.
+            </SheetDescription>
+          </SheetHeader>
+          <div className="py-6">
+            <Label htmlFor="new-author" className="text-sm font-medium text-slate-300">
+              Author Name
+            </Label>
+            <Input
+              id="new-author"
+              value={newAuthor}
+              onChange={(e) => setNewAuthor(e.target.value)}
+              className="mt-2 border-[#334155] bg-[#1e293b] text-slate-100 focus:border-blue-600 focus:ring-blue-600/20"
+              placeholder="Enter author name"
+            />
+          </div>
+          <SheetFooter>
+            <Button
+              onClick={handleAddAuthor}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Add Author
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+      
+      <Sheet open={showAddChannelSheet} onOpenChange={setShowAddChannelSheet}>
+        <SheetContent className="bg-[#0f172a] border-l border-[#1e293b] text-slate-200">
+          <SheetHeader>
+            <SheetTitle className="text-slate-100">Add New Channel</SheetTitle>
+            <SheetDescription className="text-slate-400">
+              Add a new channel to the dropdown list.
+            </SheetDescription>
+          </SheetHeader>
+          <div className="py-6">
+            <Label htmlFor="new-channel" className="text-sm font-medium text-slate-300">
+              Channel Name
+            </Label>
+            <Input
+              id="new-channel"
+              value={newChannel}
+              onChange={(e) => setNewChannel(e.target.value)}
+              className="mt-2 border-[#334155] bg-[#1e293b] text-slate-100 focus:border-blue-600 focus:ring-blue-600/20"
+              placeholder="Enter channel name"
+            />
+          </div>
+          <SheetFooter>
+            <Button
+              onClick={handleAddChannel}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Add Channel
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+      
+      <Sheet open={showAddCategorySheet} onOpenChange={setShowAddCategorySheet}>
+        <SheetContent className="bg-[#0f172a] border-l border-[#1e293b] text-slate-200">
+          <SheetHeader>
+            <SheetTitle className="text-slate-100">Add New Category</SheetTitle>
+            <SheetDescription className="text-slate-400">
+              Add a new category to the dropdown list.
+            </SheetDescription>
+          </SheetHeader>
+          <div className="py-6">
+            <Label htmlFor="new-category" className="text-sm font-medium text-slate-300">
+              Category Name
+            </Label>
+            <Input
+              id="new-category"
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              className="mt-2 border-[#334155] bg-[#1e293b] text-slate-100 focus:border-blue-600 focus:ring-blue-600/20"
+              placeholder="Enter category name"
+            />
+          </div>
+          <SheetFooter>
+            <Button
+              onClick={handleAddCategory}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Add Category
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+      
+      <Sheet open={showAddNewsletterSheet} onOpenChange={setShowAddNewsletterSheet}>
+        <SheetContent className="bg-[#0f172a] border-l border-[#1e293b] text-slate-200">
+          <SheetHeader>
+            <SheetTitle className="text-slate-100">Add New Newsletter</SheetTitle>
+            <SheetDescription className="text-slate-400">
+              Add a new newsletter to the dropdown list.
+            </SheetDescription>
+          </SheetHeader>
+          <div className="py-6">
+            <Label htmlFor="new-newsletter" className="text-sm font-medium text-slate-300">
+              Newsletter Name
+            </Label>
+            <Input
+              id="new-newsletter"
+              value={newNewsletter}
+              onChange={(e) => setNewNewsletter(e.target.value)}
+              className="mt-2 border-[#334155] bg-[#1e293b] text-slate-100 focus:border-blue-600 focus:ring-blue-600/20"
+              placeholder="Enter newsletter name"
+            />
+          </div>
+          <SheetFooter>
+            <Button
+              onClick={handleAddNewsletter}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Add Newsletter
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+      
+      <Sheet open={showAddTopicSheet} onOpenChange={setShowAddTopicSheet}>
+        <SheetContent className="bg-[#0f172a] border-l border-[#1e293b] text-slate-200">
+          <SheetHeader>
+            <SheetTitle className="text-slate-100">Add New Topic</SheetTitle>
+            <SheetDescription className="text-slate-400">
+              Add a new topic to the dropdown list.
+            </SheetDescription>
+          </SheetHeader>
+          <div className="py-6">
+            <Label htmlFor="new-topic" className="text-sm font-medium text-slate-300">
+              Topic Name
+            </Label>
+            <Input
+              id="new-topic"
+              value={newTopic}
+              onChange={(e) => setNewTopic(e.target.value)}
+              className="mt-2 border-[#334155] bg-[#1e293b] text-slate-100 focus:border-blue-600 focus:ring-blue-600/20"
+              placeholder="Enter topic name"
+            />
+          </div>
+          <SheetFooter>
+            <Button
+              onClick={handleAddTopic}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Add Topic
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 } 

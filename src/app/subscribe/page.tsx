@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import { Mail, Send, CheckCircle, AlertCircle, Calendar, ArrowRight, Check, Star, Archive, RefreshCw } from "lucide-react"
 import { staggerContainer, fadeIn, fadeInUp } from "@/lib/animations"
 import SubscribeForm from "@/components/SubscribeForm"
+import AnimatedDots from "./components/AnimatedDots"
 
 // Add letter animation variants
 const letterVariants = {
@@ -122,33 +123,9 @@ export default function SubscribePage() {
           />
           
           {/* Decorative dot pattern */}
-          <motion.div
-            className="absolute top-[-5%] left-[10%] right-[10%] h-[200px] -z-10 opacity-20 dark:opacity-10"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 0.2] }}
-            transition={{ duration: 5, times: [0, 0.5, 1], repeat: Infinity, repeatType: "reverse" }}
-          >
-            {Array.from({ length: 40 }).map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute h-1 w-1 rounded-full bg-indigo-600"
-                initial={{ 
-                  top: `${Math.random() * 100}%`, 
-                  left: `${Math.random() * 100}%`,
-                  scale: Math.random() * 0.5 + 0.5
-                }}
-                animate={{ 
-                  scale: [1, 1.5, 1],
-                  opacity: [0.3, 1, 0.3]
-                }}
-                transition={{ 
-                  duration: 3 + Math.random() * 2,
-                  repeat: Infinity,
-                  repeatType: "reverse"
-                }}
-              />
-            ))}
-          </motion.div>
+          <div className="absolute top-[-5%] left-[10%] right-[10%] h-[200px] -z-10">
+            <AnimatedDots />
+          </div>
           
           {/* Animated title with letters animation */}
           <motion.h1 
