@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import sgMail from '@sendgrid/mail';
+import { isAuthenticated } from '@/auth';
 
 // Initialize SendGrid with API key
 if (process.env.SENDGRID_API_KEY) {
@@ -10,6 +11,12 @@ if (process.env.SENDGRID_API_KEY) {
 
 export async function POST(request: Request) {
   try {
+    // Check authentication
+    const isAuth = await isAuthenticated(request);
+    if (!isAuth) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    
     const data = await request.json();
     const { to } = data;
     
@@ -27,8 +34,8 @@ export async function POST(request: Request) {
     const msg = {
       to,
       from: {
-        email: "noreply@sendgrid.net", // SendGrid domain
-        name: "Your App via atharvarb12@gmail.com" // Mentions original sender
+        email: process.env.EMAIL_FROM || "atharvarb12@gmail.com",
+        name: "Your Newsletter App"
       },
       subject: 'Debug Test Email',
       text: `This is a simple test email sent at ${new Date().toISOString()}`,

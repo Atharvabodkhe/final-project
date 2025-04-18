@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react"
 import { createClient } from "@supabase/supabase-js"
+import { ArrowLeft } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
 
 interface Subscriber {
   id: string
@@ -11,6 +14,7 @@ interface Subscriber {
 }
 
 export default function SubscribersPage() {
+  const router = useRouter()
   const [subscribers, setSubscribers] = useState<Subscriber[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -42,69 +46,81 @@ export default function SubscribersPage() {
   }, [])
   
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl md:text-3xl font-bold mb-6">Newsletter Subscribers</h1>
-      
-      {isLoading ? (
-        <p>Loading subscribers...</p>
-      ) : error ? (
-        <div className="p-4 bg-red-50 text-red-700 rounded-md">
-          {error}
+    <div className="min-h-screen bg-black text-white">
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center mb-6">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => router.push('/admin/dashboard')}
+            className="mr-4 text-slate-400 hover:text-white hover:bg-slate-800"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-2xl md:text-3xl font-bold text-white">Newsletter Subscribers</h1>
         </div>
-      ) : (
-        <>
-          <div className="mb-4">
-            <p className="text-slate-600">Total subscribers: {subscribers.length}</p>
+        
+        {isLoading ? (
+          <p className="text-slate-300">Loading subscribers...</p>
+        ) : error ? (
+          <div className="p-4 bg-red-900/30 text-red-400 border border-red-800 rounded-md">
+            {error}
           </div>
-          
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <table className="min-w-full divide-y divide-slate-200">
-              <thead className="bg-slate-50">
-                <tr>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Email
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-slate-200">
-                {subscribers.length === 0 ? (
+        ) : (
+          <>
+            <div className="mb-6">
+              <p className="text-slate-400">Total subscribers: {subscribers.length}</p>
+            </div>
+            
+            <div className="bg-[#0f172a] rounded-lg border border-[#1e293b] overflow-hidden">
+              <table className="min-w-full divide-y divide-[#1e293b]">
+                <thead className="bg-[#1e293b]">
                   <tr>
-                    <td colSpan={3} className="px-6 py-4 text-center text-slate-500">
-                      No subscribers yet
-                    </td>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                      EMAIL
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                      DATE
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                      STATUS
+                    </th>
                   </tr>
-                ) : (
-                  subscribers.map((subscriber) => (
-                    <tr key={subscriber.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
-                        {subscriber.email}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                        {new Date(subscriber.created_at).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          subscriber.status === 'active' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-red-100 text-red-800'
-                        }`}>
-                          {subscriber.status}
-                        </span>
+                </thead>
+                <tbody className="divide-y divide-[#1e293b]">
+                  {subscribers.length === 0 ? (
+                    <tr>
+                      <td colSpan={3} className="px-6 py-4 text-center text-slate-400">
+                        No subscribers yet
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </>
-      )}
+                  ) : (
+                    subscribers.map((subscriber) => (
+                      <tr key={subscriber.id} className="hover:bg-[#1e293b]/50 transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-200">
+                          {subscriber.email}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-400">
+                          {new Date(subscriber.created_at).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            subscriber.status === 'active' 
+                              ? 'bg-green-950/50 text-green-400 border border-green-800' 
+                              : 'bg-red-950/50 text-red-400 border border-red-800'
+                          }`}>
+                            {subscriber.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   )
 } 

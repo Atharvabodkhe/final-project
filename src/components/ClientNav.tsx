@@ -3,20 +3,63 @@
 import Link from "next/link"
 import { useState } from "react"
 import { ThemeToggle } from "./theme-toggle"
+import { motion } from "framer-motion"
+import { Code, Zap } from "lucide-react"
 
 export default function ClientNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   
   return (
-    <nav className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-sm py-4 relative">
+    <nav className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-sm py-4 relative z-10">
       <div className="container mx-auto px-4 flex justify-between items-center">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="flex items-end">
-            <span className="text-3xl md:text-4xl font-bold text-[#FF6B00]">T</span>
-            <span className="text-3xl md:text-4xl font-bold text-[#0038B8]">B</span>
-            <span className="text-3xl md:text-4xl font-bold text-[#009B3A]">H</span>
-          </span>
-          <span className="text-lg md:text-xl font-bold tracking-wide text-slate-900 dark:text-slate-50 ml-1">THE BYTE HIGHLIGHT</span>
+        <Link href="/" className="flex items-center gap-2 group">
+          <motion.div 
+            className="relative h-10 w-10 flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg shadow-md overflow-hidden"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ rotate: -5 }}
+            animate={{ rotate: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-blue-400 to-indigo-600 opacity-0"
+              whileHover={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            />
+            <motion.div
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              className="relative z-10"
+            >
+              <Zap className="h-6 w-6 text-white" />
+            </motion.div>
+          </motion.div>
+          
+          <div className="flex flex-col">
+            <motion.div 
+              className="flex items-center"
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              <motion.span
+                className="text-xl md:text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600"
+                whileHover={{ scale: 1.03 }}
+                transition={{ duration: 0.2 }}
+              >
+                BYTE HIGHLIGHT
+              </motion.span>
+            </motion.div>
+            <motion.span 
+              className="text-xs tracking-widest text-slate-500 dark:text-slate-400 mt-[-2px]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              TECH INSIGHTS & NEWS
+            </motion.span>
+          </div>
         </Link>
         
         {/* Desktop menu */}

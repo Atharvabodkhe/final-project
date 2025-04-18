@@ -1,11 +1,15 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { sendNewsletterBatch, sendEmail } from '@/lib/email'
+import { isAuthenticated } from '@/auth'
 
 export async function POST(request: Request) {
   try {
-    // This should be protected with authentication in production
-    // Check if the request has a valid API key or admin session
+    // Check authentication
+    const isAuth = await isAuthenticated(request)
+    if (!isAuth) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
     
     const data = await request.json()
     const { subject, content, testMode = false, testRecipient } = data
