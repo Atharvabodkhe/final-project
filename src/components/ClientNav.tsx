@@ -10,11 +10,11 @@ export default function ClientNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   
   return (
-    <nav className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-sm py-4 relative z-10">
+    <nav className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-sm py-3 sm:py-4 relative z-10">
       <div className="container mx-auto px-4 flex justify-between items-center">
-        <Link href="/" className="flex items-center gap-2 group">
+        <Link href="/" className="flex items-center gap-1 sm:gap-2 group">
           <motion.div 
-            className="relative h-10 w-10 flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg shadow-md overflow-hidden"
+            className="relative h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg shadow-md overflow-hidden"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             initial={{ rotate: -5 }}
@@ -32,7 +32,7 @@ export default function ClientNav() {
               transition={{ delay: 0.1, duration: 0.5 }}
               className="relative z-10"
             >
-              <Zap className="h-6 w-6 text-white" />
+              <Zap className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
             </motion.div>
           </motion.div>
           
@@ -44,7 +44,7 @@ export default function ClientNav() {
               transition={{ delay: 0.2, duration: 0.5 }}
             >
               <motion.span
-                className="text-xl md:text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600"
+                className="text-lg sm:text-xl md:text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600"
                 whileHover={{ scale: 1.03 }}
                 transition={{ duration: 0.2 }}
               >
@@ -52,7 +52,7 @@ export default function ClientNav() {
               </motion.span>
             </motion.div>
             <motion.span 
-              className="text-xs tracking-widest text-slate-500 dark:text-slate-400 mt-[-2px]"
+              className="hidden xs:block text-[10px] sm:text-xs tracking-widest text-slate-500 dark:text-slate-400 mt-[-2px]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.5 }}
@@ -63,28 +63,28 @@ export default function ClientNav() {
         </Link>
         
         {/* Desktop menu */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-3 lg:gap-6">
           <Link 
             href="/" 
-            className="text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
+            className="text-sm lg:text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
           >
             Home
           </Link>
           <Link 
             href="/about" 
-            className="text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
+            className="text-sm lg:text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
           >
             About
           </Link>
           <Link 
             href="/subscribe" 
-            className="text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
+            className="text-sm lg:text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
           >
             Subscribe
           </Link>
           <Link 
             href="/contact" 
-            className="text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
+            className="text-sm lg:text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
           >
             Contact
           </Link>
@@ -101,40 +101,40 @@ export default function ClientNav() {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
-            <span className={`block w-6 h-0.5 bg-slate-800 dark:bg-slate-200 transition-transform duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
-            <span className={`block w-6 h-0.5 bg-slate-800 dark:bg-slate-200 transition-opacity duration-300 ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
-            <span className={`block w-6 h-0.5 bg-slate-800 dark:bg-slate-200 transition-transform duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
+            <span className={`block w-5 sm:w-6 h-0.5 bg-slate-800 dark:bg-slate-200 transition-transform duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
+            <span className={`block w-5 sm:w-6 h-0.5 bg-slate-800 dark:bg-slate-200 transition-opacity duration-300 ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
+            <span className={`block w-5 sm:w-6 h-0.5 bg-slate-800 dark:bg-slate-200 transition-transform duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
           </button>
         </div>
       </div>
       
       {/* Mobile menu */}
       <div className={`md:hidden transition-max-height duration-300 ease-in-out overflow-hidden ${isMenuOpen ? 'max-h-60' : 'max-h-0'}`}>
-        <div className="container mx-auto px-4 py-2 flex flex-col space-y-3 border-t border-slate-100 dark:border-slate-800 mt-2">
+        <div className="container mx-auto px-4 py-2 flex flex-col space-y-2 sm:space-y-3 border-t border-slate-100 dark:border-slate-800 mt-2">
           <Link 
             href="/" 
-            className="py-2 text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
+            className="py-1.5 sm:py-2 text-sm sm:text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
             onClick={() => setIsMenuOpen(false)}
           >
             Home
           </Link>
           <Link 
             href="/about" 
-            className="py-2 text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
+            className="py-1.5 sm:py-2 text-sm sm:text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
             onClick={() => setIsMenuOpen(false)}
           >
             About
           </Link>
           <Link 
             href="/subscribe" 
-            className="py-2 text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
+            className="py-1.5 sm:py-2 text-sm sm:text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
             onClick={() => setIsMenuOpen(false)}
           >
             Subscribe
           </Link>
           <Link 
             href="/contact" 
-            className="py-2 text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
+            className="py-1.5 sm:py-2 text-sm sm:text-base font-medium text-slate-800 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
             onClick={() => setIsMenuOpen(false)}
           >
             Contact

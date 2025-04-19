@@ -833,257 +833,188 @@ export default function ArticlesManagement() {
   }
   
   if (!isAuthenticated) {
-    return null
+    return <div>Loading...</div>
   }
   
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="icon"
-            onClick={() => router.push('/admin/dashboard')}
-            className="mr-2 border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <motion.div 
-            className="relative h-8 w-8 flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg shadow-md overflow-hidden"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ rotate: -5 }}
-            animate={{ rotate: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <FileText className="h-5 w-5 text-white" />
-          </motion.div>
-          <div>
-            <motion.h1 
-              className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600"
-              whileHover={{ scale: 1.03 }}
-              transition={{ duration: 0.2 }}
-            >
-              Article Management
-            </motion.h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-[-3px]">
-              Create, edit and manage articles
-            </p>
-          </div>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="container mx-auto px-4 py-6 sm:py-8 md:py-10 max-w-7xl"
+    >
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-1 sm:mb-2">
+            Article Management
+          </h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Add, edit, or remove articles for your newsletter
+          </p>
         </div>
+        
         <Button 
           onClick={() => {
             resetForm()
             setShowAddDialog(true)
           }}
-          className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white transition-all"
+          size="sm"
+          className="px-3 sm:px-4 h-9 sm:h-10 text-xs sm:text-sm"
         >
-          <Plus className="mr-2 h-4 w-4" /> 
-          Add Article
+          <Plus className="mr-1 h-4 w-4" /> New Article
         </Button>
       </div>
       
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-slate-200 dark:border-slate-700 mb-6"
-      >
-        <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
-          <div className="relative w-full md:w-1/2">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <Input 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search articles..." 
-              className="pl-10 w-full" 
-            />
-            {searchTerm && (
-              <button 
-                onClick={() => setSearchTerm("")}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
-          </div>
-          
-          <div className="flex gap-2">
-            <div className="w-full md:w-48">
-              <Select 
-                value={selectedAuthor}
-                onValueChange={(value) => setSelectedAuthor(value)}
-              >
-                <SelectTrigger className="w-full">
-                  <div className="flex items-center">
-                    <Filter className="h-4 w-4 mr-2 text-slate-500" />
-                    <SelectValue placeholder="Filter by author" />
-                  </div>
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md border border-slate-200 dark:border-slate-700 overflow-hidden mb-8">
+        <div className="p-4 sm:p-6 border-b border-slate-200 dark:border-slate-700">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Input 
+                placeholder="Search articles..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-9 h-9 sm:h-10 text-xs sm:text-sm"
+              />
+            </div>
+            
+            <div className="flex flex-row gap-2 sm:gap-3">
+              <Select value={selectedAuthor} onValueChange={(value) => setSelectedAuthor(value)}>
+                <SelectTrigger className="w-[140px] sm:w-[180px] h-9 sm:h-10 text-xs sm:text-sm">
+                  <SelectValue placeholder="Filter by author" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Authors</SelectItem>
-                  {authors.map((author) => (
-                    <SelectItem key={author} value={author}>{author}</SelectItem>
+                  <SelectItem value="all" className="text-xs sm:text-sm">All authors</SelectItem>
+                  {uniqueAuthors().map(author => (
+                    <SelectItem key={author} value={author} className="text-xs sm:text-sm">{author}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <ArrowUpDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Sort By</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleSort('title')}>
-                  Title {sortConfig.key === 'title' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleSort('author')}>
-                  Author {sortConfig.key === 'author' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleSort('created_at')}>
-                  Date {sortConfig.key === 'created_at' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
         </div>
         
-        {error && (
-          <div className="mb-6 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md text-red-600 dark:text-red-400 flex items-center">
-            <AlertTriangle className="h-5 w-5 mr-2" />
-            {error}
-          </div>
-        )}
-        
-        {isLoading ? (
-          <div className="py-20 flex flex-col items-center justify-center text-slate-400">
-            <Loader2 className="h-10 w-10 animate-spin mb-4" />
-            <p>Loading articles...</p>
-          </div>
-        ) : filteredArticles().length === 0 ? (
-          <div className="py-20 flex flex-col items-center justify-center text-slate-400">
-            <FileText className="h-10 w-10 mb-4" />
-            <p className="mb-2">No articles found</p>
-            <p className="text-sm">
-              {searchTerm || selectedAuthor !== 'all' 
-                ? "Try changing your search or filter criteria" 
-                : "Get started by adding your first article"}
-            </p>
-          </div>
-        ) : (
-          <motion.div 
-            className="overflow-x-auto"
-            variants={container}
-            initial="hidden"
-            animate="show"
-          >
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-slate-200 dark:border-slate-700">
-                  <th onClick={() => handleSort('title')} className="text-left py-3 px-4 text-slate-800 dark:text-slate-200 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/30">
-                    <div className="flex items-center">
-                      Title
-                      {sortConfig.key === 'title' && (
-                        <span className="ml-1">{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>
-                      )}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+                <th className="text-left whitespace-nowrap px-4 py-3 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300">
+                  <div className="flex items-center cursor-pointer" onClick={() => handleSort('title')}>
+                    Title <ArrowUpDown className="ml-1 h-3 w-3" />
+                  </div>
+                </th>
+                <th className="text-left whitespace-nowrap px-4 py-3 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hidden md:table-cell">
+                  <div className="flex items-center cursor-pointer" onClick={() => handleSort('subtitle')}>
+                    Subtitle <ArrowUpDown className="ml-1 h-3 w-3" />
+                  </div>
+                </th>
+                <th className="text-left whitespace-nowrap px-4 py-3 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hidden sm:table-cell">
+                  <div className="flex items-center cursor-pointer" onClick={() => handleSort('author')}>
+                    Author <ArrowUpDown className="ml-1 h-3 w-3" />
+                  </div>
+                </th>
+                <th className="text-left whitespace-nowrap px-4 py-3 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hidden lg:table-cell">
+                  <div className="flex items-center cursor-pointer" onClick={() => handleSort('channel')}>
+                    Channel <ArrowUpDown className="ml-1 h-3 w-3" />
+                  </div>
+                </th>
+                <th className="text-left whitespace-nowrap px-4 py-3 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hidden lg:table-cell">
+                  <div className="flex items-center cursor-pointer" onClick={() => handleSort('created_at')}>
+                    Created <ArrowUpDown className="ml-1 h-3 w-3" />
+                  </div>
+                </th>
+                <th className="text-right whitespace-nowrap px-4 py-3 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr>
+                  <td colSpan={6} className="px-4 py-8 text-center text-sm text-slate-500 dark:text-slate-400">
+                    <div className="flex justify-center items-center">
+                      <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                      Loading articles...
                     </div>
-                  </th>
-                  <th className="text-left py-3 px-4 text-slate-800 dark:text-slate-200">
-                    <div className="flex items-center">
-                      Subtitle
-                    </div>
-                  </th>
-                  <th onClick={() => handleSort('author')} className="text-left py-3 px-4 text-slate-800 dark:text-slate-200 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/30">
-                    <div className="flex items-center">
-                      Author
-                      {sortConfig.key === 'author' && (
-                        <span className="ml-1">{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>
-                      )}
-                    </div>
-                  </th>
-                  <th onClick={() => handleSort('created_at')} className="text-left py-3 px-4 text-slate-800 dark:text-slate-200 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/30">
-                    <div className="flex items-center">
-                      Date
-                      {sortConfig.key === 'created_at' && (
-                        <span className="ml-1">{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>
-                      )}
-                    </div>
-                  </th>
-                  <th className="text-left py-3 px-4 text-slate-800 dark:text-slate-200">URL</th>
-                  <th className="text-left py-3 px-4 text-slate-800 dark:text-slate-200">Actions</th>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                <AnimatePresence>
-                  {filteredArticles().map((article) => (
-                    <motion.tr 
-                      key={article.id} 
-                      className="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/20"
-                      variants={item}
-                      exit={{ opacity: 0, y: -10 }}
-                      layout
-                    >
-                      <td className="py-3 px-4 text-slate-700 dark:text-slate-300 font-medium">{article.title}</td>
-                      <td className="py-3 px-4 text-slate-600 dark:text-slate-400">{article.subtitle}</td>
-                      <td className="py-3 px-4 text-slate-600 dark:text-slate-400">{article.author}</td>
-                      <td className="py-3 px-4 text-slate-600 dark:text-slate-400">{formatDate(article.created_at)}</td>
-                      <td className="py-3 px-4 text-slate-600 dark:text-slate-400">
-                        {article.url ? (
-                          <a 
-                            href={article.url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="flex items-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                          >
-                            <LinkIcon className="h-3 w-3 mr-1" />
-                            Link
-                          </a>
-                        ) : 'No URL'}
-                      </td>
-                      <td className="py-3 px-4 flex space-x-1">
+              ) : error ? (
+                <tr>
+                  <td colSpan={6} className="px-4 py-8 text-center text-sm text-red-500">
+                    <div className="flex justify-center items-center">
+                      <AlertTriangle className="h-5 w-5 mr-2" />
+                      {error}
+                    </div>
+                  </td>
+                </tr>
+              ) : filteredArticles().length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-4 py-8 text-center text-sm text-slate-500 dark:text-slate-400">
+                    {searchTerm || selectedAuthor !== 'all' 
+                      ? "No articles match your filters"
+                      : "No articles yet. Create your first article by clicking 'New Article'"}
+                  </td>
+                </tr>
+              ) : (
+                filteredArticles().map((article) => (
+                  <tr key={article.id} className="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-900/50">
+                    <td className="px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-slate-200 truncate max-w-[140px] sm:max-w-[200px]">
+                      {article.title}
+                    </td>
+                    <td className="px-4 py-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 truncate max-w-[140px] sm:max-w-[200px] hidden md:table-cell">
+                      {article.subtitle}
+                    </td>
+                    <td className="px-4 py-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 hidden sm:table-cell">
+                      {article.author}
+                    </td>
+                    <td className="px-4 py-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 hidden lg:table-cell">
+                      <Badge variant="secondary" className="text-[10px] sm:text-xs">
+                        {article.channel}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 hidden lg:table-cell">
+                      {formatDate(article.created_at)}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex justify-end gap-1 sm:gap-2">
                         <Button 
+                          variant="ghost" 
+                          size="icon"
+                          className="h-7 w-7 sm:h-8 sm:w-8"
                           onClick={() => {
                             setArticleToView(article)
                             setShowViewDialog(true)
                           }}
-                          size="icon" 
-                          variant="ghost"
-                          className="h-8 w-8 text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
                         >
-                          <Eye className="h-4 w-4" />
+                          <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </Button>
                         <Button 
+                          variant="ghost" 
+                          size="icon"
+                          className="h-7 w-7 sm:h-8 sm:w-8"
                           onClick={() => openEditDialog(article)}
-                          size="icon" 
-                          variant="ghost"
-                          className="h-8 w-8 text-slate-600 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-400"
                         >
-                          <Edit2 className="h-4 w-4" />
+                          <Edit2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </Button>
                         <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-7 w-7 sm:h-8 sm:w-8 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/50"
                           onClick={() => {
                             setArticleToDelete(article)
                             setShowDeleteDialog(true)
                           }}
-                          size="icon" 
-                          variant="ghost"
-                          className="h-8 w-8 text-slate-600 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </Button>
-                      </td>
-                    </motion.tr>
-                  ))}
-                </AnimatePresence>
-              </tbody>
-            </table>
-          </motion.div>
-        )}
-      </motion.div>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
       
       {/* Add Article Dialog */}
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
@@ -1828,6 +1759,6 @@ export default function ArticlesManagement() {
           </SheetFooter>
         </SheetContent>
       </Sheet>
-    </div>
+    </motion.div>
   )
 } 

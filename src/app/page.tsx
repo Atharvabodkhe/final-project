@@ -129,7 +129,7 @@ export default function Home() {
       initial="hidden"
       animate="visible"
       variants={staggerContainer}
-      className="min-h-screen py-16 px-4 bg-gradient-to-b from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative overflow-hidden"
+      className="min-h-screen py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-b from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative overflow-hidden"
     >
       {/* Animated gradient background blobs */}
       <motion.div 
@@ -170,7 +170,7 @@ export default function Home() {
 
       <div className="container mx-auto max-w-6xl">
         <motion.header 
-          className="mb-16 text-center relative"
+          className="mb-8 sm:mb-12 md:mb-16 text-center relative"
         >
           {/* Enhanced background element */}
           <motion.div 
@@ -221,39 +221,41 @@ export default function Home() {
             ))}
           </motion.div>
           
-          {/* Animated title with letters animation */}
-          <motion.h1 
-            variants={titleVariants}
-            className="text-5xl md:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 mb-8"
-          >
-            {Array.from("The Byte Highlight").map((letter, i) => (
-              <motion.span
-                key={i}
-                variants={letterVariants}
-                className="inline-block"
-              >
-                {letter === " " ? "\u00A0" : letter}
-              </motion.span>
-            ))}
-          </motion.h1>
-          
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-            className="text-base md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed font-light"
-          >
-            Your source for the latest tech news and insights delivered directly to your inbox
-          </motion.p>
-          
-          {/* Enhanced decorative element */}
-          <div className="flex justify-center mt-12">
-            <motion.div 
-              className="h-1 w-24 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full"
-              initial={{ opacity: 0, width: 0 }}
-              animate={{ opacity: 1, width: 96 }}
-              transition={{ duration: 1, delay: 1.2 }}
-            />
+          {/* Main headline */}
+          <div className="relative z-10">
+            <motion.h1 
+              variants={titleVariants}
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 mb-4 sm:mb-6 md:mb-8"
+            >
+              {Array.from("The Byte Highlight").map((letter, i) => (
+                <motion.span
+                  key={i}
+                  variants={letterVariants}
+                  className="inline-block"
+                >
+                  {letter === " " ? "\u00A0" : letter}
+                </motion.span>
+              ))}
+            </motion.h1>
+            
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.8 }}
+              className="text-sm sm:text-base md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed font-light px-4"
+            >
+              Your source for the latest tech news and insights delivered directly to your inbox
+            </motion.p>
+            
+            {/* Enhanced decorative element */}
+            <div className="flex justify-center mt-6 sm:mt-8 md:mt-12">
+              <motion.div 
+                className="h-1 w-16 sm:w-20 md:w-24 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full"
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: '6rem' }}
+                transition={{ duration: 1, delay: 1.2 }}
+              />
+            </div>
           </div>
         </motion.header>
         
@@ -538,25 +540,25 @@ export default function Home() {
         {/* CTA Section */}
         <motion.div 
           whileHover={{ scale: 1.01 }}
-          className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-10 text-center shadow-xl max-w-4xl mx-auto mb-10"
+          className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-6 sm:p-8 md:p-10 text-center shadow-xl max-w-4xl mx-auto mb-6 sm:mb-10"
         >
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="text-2xl md:text-3xl font-bold mb-4"
+            className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-4"
           >
             Ready to stay updated?
           </motion.h2>
-          <p className="mb-8 text-blue-100 max-w-2xl mx-auto">
+          <p className="mb-6 sm:mb-8 text-blue-100 max-w-2xl mx-auto text-sm sm:text-base">
             Join thousands of tech professionals and enthusiasts who receive our weekly newsletter packed with insights, tutorials, and industry trends.
           </p>
           <motion.div
             whileTap={{ scale: 0.95 }}
             whileHover={{ scale: 1.05 }}
           >
-            <Link href="/subscribe" className="bg-white text-blue-600 font-medium py-3 px-8 rounded-full inline-flex items-center shadow-md">
+            <Link href="/subscribe" className="bg-white text-blue-600 font-medium py-2 sm:py-3 px-6 sm:px-8 rounded-full inline-flex items-center shadow-md text-sm sm:text-base">
               Subscribe Now
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>

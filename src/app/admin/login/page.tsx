@@ -93,7 +93,7 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-[80vh] relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <div className="flex items-center justify-center min-h-[80vh] px-4 relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* Animated gradient background blobs */}
       <motion.div 
         className="absolute top-0 left-0 w-full h-screen -z-10 opacity-50 dark:opacity-30 overflow-hidden"
@@ -161,15 +161,15 @@ export default function AdminLogin() {
       </motion.div>
       
       <motion.div 
-        className="w-full max-w-md p-8 space-y-8 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-lg shadow-lg border border-slate-200 dark:border-slate-700"
+        className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 space-y-6 sm:space-y-8 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-lg shadow-lg border border-slate-200 dark:border-slate-700"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
         <div className="text-center">
-          <div className="flex flex-col items-center mb-6">
+          <div className="flex flex-col items-center mb-4 sm:mb-6">
             <motion.div 
-              className="relative h-14 w-14 flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg shadow-md overflow-hidden mb-4"
+              className="relative h-12 w-12 sm:h-14 sm:w-14 flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg shadow-md overflow-hidden mb-3 sm:mb-4"
               whileHover={{ scale: 1.05, rotate: [0, -5, 5, 0] }}
               whileTap={{ scale: 0.95 }}
               initial={{ rotate: -5, scale: 0.9 }}
@@ -181,12 +181,12 @@ export default function AdminLogin() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
               >
-                <Zap className="h-7 w-7 text-white" />
+                <Zap className="h-6 w-6 sm:h-7 sm:w-7 text-white" />
               </motion.div>
             </motion.div>
             
             <motion.h1 
-              className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600"
+              className="text-xl sm:text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.5 }}
@@ -194,95 +194,90 @@ export default function AdminLogin() {
               BYTE HIGHLIGHT
             </motion.h1>
             <motion.p 
-              className="mt-2 text-sm text-slate-500 dark:text-slate-400"
+              className="mt-1 sm:mt-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.5 }}
             >
-              Admin Authentication
+              Admin Login
             </motion.p>
           </div>
-          
-          <motion.div 
-            className="flex items-center justify-center mb-6"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-          >
-            <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center shadow-sm">
-              <Lock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-            </div>
-            <div className="h-0.5 w-20 bg-gradient-to-r from-blue-500 to-indigo-500 ml-2" />
-          </motion.div>
         </div>
-
+        
         <motion.form 
-          className="mt-8 space-y-6" 
+          className="space-y-4 sm:space-y-6"
           onSubmit={handleLogin}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
         >
-          <div className="space-y-5">
+          <div className="space-y-2">
+            <label htmlFor="username" className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
+              Username
+            </label>
             <motion.div
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.7, duration: 0.4 }}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
             >
-              <label htmlFor="username" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                Username
-              </label>
               <Input
                 id="username"
-                name="username"
                 type="text"
-                required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="border-slate-300 dark:border-slate-600 focus-visible:ring-blue-500 bg-white/90 dark:bg-slate-900/90"
-                placeholder="Enter your username"
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ x: 20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.4 }}
-            >
-              <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                Password
-              </label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
                 required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="border-slate-300 dark:border-slate-600 focus-visible:ring-blue-500 bg-white/90 dark:bg-slate-900/90"
-                placeholder="Enter your password"
+                placeholder="admin"
+                className="w-full px-3 py-2 text-xs sm:text-sm border border-slate-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:text-white dark:placeholder-slate-400 rounded-md"
               />
             </motion.div>
           </div>
-
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.9, duration: 0.4 }}
+          
+          <div className="space-y-2">
+            <label htmlFor="password" className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
+              Password
+            </label>
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+            >
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+                className="w-full px-3 py-2 text-xs sm:text-sm border border-slate-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:text-white dark:placeholder-slate-400 rounded-md"
+              />
+            </motion.div>
+          </div>
+          
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg"
               disabled={loading}
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs sm:text-sm py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
             >
               {loading ? (
                 <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"
-                />
-              ) : null}
-              {loading ? "Logging in..." : "Sign in"}
+                  className="flex items-center justify-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Logging in...
+                </motion.div>
+              ) : (
+                <div className="flex items-center justify-center">
+                  <Lock className="mr-2 h-4 w-4" />
+                  Login
+                </div>
+              )}
             </Button>
           </motion.div>
         </motion.form>
