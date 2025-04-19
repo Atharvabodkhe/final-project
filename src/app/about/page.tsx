@@ -403,7 +403,7 @@ export default function AboutPage() {
               className="rounded-lg shadow-xl overflow-hidden"
             >
               <Image 
-                src="/images/newsletter.jpg" 
+                src="/images/aboutus3.avif" 
                 alt="Newsletter example" 
                 width={600} 
                 height={400} 
@@ -428,7 +428,7 @@ export default function AboutPage() {
               className="rounded-lg shadow-xl overflow-hidden order-2 md:order-1"
             >
               <Image 
-                src="/images/mission.jpg" 
+                src="/images/aboutus2.avif" 
                 alt="Our mission" 
                 width={600} 
                 height={400} 
@@ -638,112 +638,141 @@ export default function AboutPage() {
           </motion.div>
           
           {/* Featured content section */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="mb-20 max-w-4xl mx-auto"
-          >
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-8 text-center">
-              Featured Content
-            </h2>
+          {/* Featured Articles Section */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="mb-20 max-w-5xl mx-auto"
+        >
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-8 text-center">
+            Featured Articles
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <motion.div 
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              whileHover={{ y: -10 }}
+              className="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-lg"
+            >
+              <div className="h-40 bg-blue-500 relative">
+                <Image 
+                  src="/images/Ai-image.avif" 
+                  alt="AI in 2024" 
+                  width={400} 
+                  height={200} 
+                  className="w-full h-full object-cover"
+                  unoptimized={true} // Remove this in production
+                />
+              </div>
+              <div className="p-5">
+                <span className="inline-block px-2 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 rounded-full mb-3">AI & ML</span>
+                <h3 className="font-semibold text-slate-900 dark:text-white mb-2">
+                  The State of AI in 2024
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
+                  Exploring how artificial intelligence is reshaping industries and what to expect next.
+                </p>
+                <motion.a 
+                  whileHover={{ x: 5 }}
+                  className="text-blue-500 text-sm font-medium flex items-center"
+                  href="#"
+                >
+                  Read article <ArrowRight className="ml-1 h-3 w-3" />
+                </motion.a>
+              </div>
+            </motion.div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <motion.div 
-                whileHover={{ y: -10 }}
-                className="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-lg"
-              >
-                <div className="h-40 bg-blue-500 relative">
-                  <Image 
-                    src="/images/article-1.jpg" 
-                    alt="Article 1" 
-                    width={400} 
-                    height={200} 
-                    className="w-full h-full object-cover"
-                    unoptimized={true} // Remove this in production
-                  />
-                </div>
-                <div className="p-5">
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-2">
-                    Getting Started with React
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
-                    A beginner's guide to building modern web applications with React.
-                  </p>
-                  <motion.a 
-                    whileHover={{ x: 5 }}
-                    className="text-blue-500 text-sm font-medium flex items-center"
-                    href="#"
-                  >
-                    Read more <ArrowRight className="ml-1 h-3 w-3" />
-                  </motion.a>
-                </div>
-              </motion.div>
-              
-              <motion.div 
-                whileHover={{ y: -10 }}
-                className="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-lg"
-              >
-                <div className="h-40 bg-blue-500 relative">
-                  <Image 
-                    src="/images/article-2.jpg" 
-                    alt="Article 2" 
-                    width={400} 
-                    height={200} 
-                    className="w-full h-full object-cover"
-                    unoptimized={true} // Remove this in production
-                  />
-                </div>
-                <div className="p-5">
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-2">
-                    Understanding Algorithms
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
-                    Breaking down complex algorithms with simple, real-world examples.
-                  </p>
-                  <motion.a 
-                    whileHover={{ x: 5 }}
-                    className="text-blue-500 text-sm font-medium flex items-center"
-                    href="#"
-                  >
-                    Read more <ArrowRight className="ml-1 h-3 w-3" />
-                  </motion.a>
-                </div>
-              </motion.div>
-              
-              <motion.div 
-                whileHover={{ y: -10 }}
-                className="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-lg"
-              >
-                <div className="h-40 bg-blue-500 relative">
-                  <Image 
-                    src="/images/article-3.jpg" 
-                    alt="Article 3" 
-                    width={400} 
-                    height={200} 
-                    className="w-full h-full object-cover"
-                    unoptimized={true} // Remove this in production
-                  />
-                </div>
-                <div className="p-5">
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-2">
-                    The Future of AI
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
-                    Exploring how artificial intelligence is reshaping the tech landscape.
-                  </p>
-                  <motion.a 
-                    whileHover={{ x: 5 }}
-                    className="text-blue-500 text-sm font-medium flex items-center"
-                    href="#"
-                  >
-                    Read more <ArrowRight className="ml-1 h-3 w-3" />
-                  </motion.a>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
+            <motion.div 
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              whileHover={{ y: -10 }}
+              className="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-lg"
+            >
+              <div className="h-40 bg-blue-500 relative">
+                <Image 
+                  src="/images/Cloud Architecture.avif" 
+                  alt="Cloud Architecture" 
+                  width={400} 
+                  height={200} 
+                  className="w-full h-full object-cover"
+                  unoptimized={true} // Remove this in production
+                />
+              </div>
+              <div className="p-5">
+                <span className="inline-block px-2 py-1 text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 rounded-full mb-3">Cloud</span>
+                <h3 className="font-semibold text-slate-900 dark:text-white mb-2">
+                  Modern Cloud Architecture
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
+                  Best practices for designing scalable and resilient cloud infrastructure.
+                </p>
+                <motion.a 
+                  whileHover={{ x: 5 }}
+                  className="text-blue-500 text-sm font-medium flex items-center"
+                  href="#"
+                >
+                  Read article <ArrowRight className="ml-1 h-3 w-3" />
+                </motion.a>
+              </div>
+            </motion.div>
+            
+            <motion.div 
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              whileHover={{ y: -10 }}
+              className="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-lg"
+            >
+              <div className="h-40 bg-blue-500 relative">
+                <Image 
+                  src="/images/Frontend Trends.avif" 
+                  alt="Web Development" 
+                  width={400} 
+                  height={200} 
+                  className="w-full h-full object-cover"
+                  unoptimized={true} // Remove this in production
+                />
+              </div>
+              <div className="p-5">
+                <span className="inline-block px-2 py-1 text-xs font-medium bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-300 rounded-full mb-3">Web Dev</span>
+                <h3 className="font-semibold text-slate-900 dark:text-white mb-2">
+                  Frontend Trends in 2024
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
+                  The latest frameworks, tools, and techniques driving modern web development.
+                </p>
+                <motion.a 
+                  whileHover={{ x: 5 }}
+                  className="text-blue-500 text-sm font-medium flex items-center"
+                  href="#"
+                >
+                  Read article <ArrowRight className="ml-1 h-3 w-3" />
+                </motion.a>
+              </div>
+            </motion.div>
+          </div>
+          
+          <div className="mt-10 text-center">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-block"
+            >
+              <Link href="/articles" className="bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 px-6 py-3 rounded-lg shadow-sm inline-flex items-center font-medium">
+                View All Articles
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </motion.div>
+          </div>
+        </motion.div>
           
           {/* CTA Section with consistent styling */}
           <motion.div 

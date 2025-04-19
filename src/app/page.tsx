@@ -311,7 +311,7 @@ export default function Home() {
             className="rounded-lg shadow-xl overflow-hidden"
           >
             <Image 
-              src="/images/newsletter-hero.jpg" 
+              src="/images/aboutus1.avif" 
               alt="Newsletter Example" 
               width={600} 
               height={400} 
@@ -344,7 +344,7 @@ export default function Home() {
             >
               <div className="h-40 bg-blue-500 relative">
                 <Image 
-                  src="/images/article-1.jpg" 
+                  src="/images/Ai-image.avif" 
                   alt="AI in 2024" 
                   width={400} 
                   height={200} 
@@ -380,7 +380,7 @@ export default function Home() {
             >
               <div className="h-40 bg-blue-500 relative">
                 <Image 
-                  src="/images/article-2.jpg" 
+                  src="/images/Cloud Architecture.avif" 
                   alt="Cloud Architecture" 
                   width={400} 
                   height={200} 
@@ -416,7 +416,7 @@ export default function Home() {
             >
               <div className="h-40 bg-blue-500 relative">
                 <Image 
-                  src="/images/article-3.jpg" 
+                  src="/images/Frontend Trends.avif" 
                   alt="Web Development" 
                   width={400} 
                   height={200} 

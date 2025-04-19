@@ -507,7 +507,7 @@ export default function ContactPage() {
             >
               <div className="relative h-56 md:h-72">
                 <Image
-                  src="/images/contact.jpg"
+                  src="/images/contactus.avif"
                   alt="Contact Us"
                   fill
                   className="object-cover"
